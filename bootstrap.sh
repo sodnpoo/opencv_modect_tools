@@ -3,7 +3,7 @@ sudo apt-get update
 sudo apt-get -y upgrade
 
 #install some deps
-sudo apt-get -y install git vlc-nox cmake libopencv-dev incron
+sudo apt-get -y install git vlc-nox cmake libopencv-dev incron python-pip python-dev
 
 cd ~
 
