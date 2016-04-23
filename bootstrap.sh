@@ -26,3 +26,6 @@ ln -s ~/opencv_modect_tools/mask.png ~
 
 # make the drop directory
 mkdir ~/drop
+
+# setup modect to run at boot
+echo "@reboot pi /home/pi/opencv_modect_tools/start.sh" | sudo tee /etc/cron.d/start_opencv_modect > /dev/null
