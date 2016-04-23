@@ -19,6 +19,7 @@ cd ~
 #pull the modect userland and build the binary
 git clone https://github.com/sodnpoo/userland.git
 cd userland
+git checkout raspividcv
 mkdir build
 cd build
 cmake ../
