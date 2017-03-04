@@ -38,17 +38,21 @@ echo "@reboot pi /home/pi/opencv_modect_tools/start.sh" | sudo tee -a /etc/cron.
 # sweep up any lost videos
 echo "0 */6 * * * pi /home/pi/opencv_modect_tools/sweep.sh" | sudo tee -a /etc/cron.d/start_opencv_modect > /dev/null
 
-# install youtube uploader
-sudo pip install --upgrade google-api-python-client progressbar2
-git clone https://github.com/tokland/youtube-upload.git
-cd youtube-upload/
-sudo python setup.py install
+## install youtube uploader
+#sudo pip install --upgrade google-api-python-client progressbar2
+#git clone https://github.com/tokland/youtube-upload.git
+#cd youtube-upload/
+#sudo python setup.py install
+#echo *** dont forget to get /home/pi/client_secrets.json from google ***
 
-echo *** dont forget to get /home/pi/client_secrets.json from google ***
+#install boto
+sudo pip install boto
+echo *** don't forget to configure ~/.aws/credentials ***
 
 # incrond
 echo pi | sudo tee -a /etc/incron.allow > /dev/null
-echo "/home/pi/drop/ IN_MOVED_TO /home/pi/opencv_modect_tools/tsdotyoutube.py \$@/\$#" | sudo tee -a /var/spool/incron/pi
+#echo "/home/pi/drop/ IN_MOVED_TO /home/pi/opencv_modect_tools/tsdotyoutube.py \$@/\$#" | sudo tee -a /var/spool/incron/pi
+echo "/home/pi/drop/ IN_MOVED_TO /home/pi/opencv_modect_tools/tsdots3.py \$@/\$#" | sudo tee -a /var/spool/incron/pi
 sudo chown pi.incron /var/spool/incron/pi
 sudo chmod 600 /var/spool/incron/pi
 
