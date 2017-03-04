@@ -26,8 +26,12 @@ except:
 
 bn = path.basename(fn)
 en = path.splitext(bn)[0]
+thumbfn = "%s.jpg" % fn
+thumbbn = path.basename(thumbfn)
+print fn, bn, en, thumbfn, thumbbn
 
-print fn, bn, en
+thumbcmd = "ffmpeg -i %s -ss 00:00:03.000 -vframes 1 %s" % (fn, thumbfn)
+os.system(thumbcmd)
 
 unixts = int(en)
 dt = datetime.fromtimestamp(unixts)
@@ -49,10 +53,17 @@ def get_bucket(bucket_name):
 
 
 b = get_bucket('sodnpoo-cams')
+
 k = Key(b)
 k.key = "%s/%s/%s" % (tag, dt.date().isoformat(), bn)
 print "key:", k.key
 k.set_contents_from_filename(fn)
-
 #hopefully any exceptions before here will stop us deleting the source file
 os.remove(fn)
+
+k = Key(b)
+k.key = "%s/%s/%s" % (tag, dt.date().isoformat(), thumbbn)
+print "key:", k.key
+k.set_contents_from_filename(thumbfn)
+#hopefully any exceptions before here will stop us deleting the source file
+os.remove(thumbfn)
