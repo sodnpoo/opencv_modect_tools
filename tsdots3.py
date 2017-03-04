@@ -28,6 +28,7 @@ bn = path.basename(fn)
 en = path.splitext(bn)[0]
 thumbfn = "%s.jpg" % fn
 thumbbn = path.basename(thumbfn)
+thumbfn = "/tmp/%s" % thumbbn
 print fn, bn, en, thumbfn, thumbbn
 
 thumbcmd = "ffmpeg -i %s -ss 00:00:03.000 -vframes 1 %s" % (fn, thumbfn)
