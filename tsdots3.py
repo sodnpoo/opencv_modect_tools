@@ -15,8 +15,10 @@ import socket
 import boto
 from boto.s3.key import Key
 import os
+import os.path
 
 tag = socket.gethostname()
+#tag = "testing"
 
 try:
     fn = sys.argv[1]
@@ -26,12 +28,17 @@ except:
 
 bn = path.basename(fn)
 en = path.splitext(bn)[0]
-thumbfn = "%s.jpg" % fn
-thumbbn = path.basename(thumbfn)
-thumbfn = "/tmp/%s" % thumbbn
+#thumbfn = "/tmp/%s.jpg" % bn
+thumbfn = "/tmp/%s.%%d.jpg" % bn
+#thumbbn = "%s.jpg" % bn
+thumbbn = "%s.%%d.jpg" % bn
 print fn, bn, en, thumbfn, thumbbn
 
-thumbcmd = "ffmpeg -i %s -ss 00:00:03.000 -vframes 1 %s" % (fn, thumbfn)
+"ffmpeg -i 1488702455.mp4 -ss 00:00:03.000 -vframes 5 -vf fps=1/3 out_%d.jpg"
+thumbcmd = "ffmpeg -i %s -ss 00:00:03.000 -vframes 5 -vf fps=1/3 -s 480x320 %s" % (fn, thumbfn)
+#thumbcmd = "ffmpeg -i %s -ss 00:00:03.000 -vframes 1 %s" % (fn, thumbfn)
+print thumbcmd
+
 os.system(thumbcmd)
 
 unixts = int(en)
@@ -56,15 +63,25 @@ def get_bucket(bucket_name):
 b = get_bucket('sodnpoo-cams')
 
 k = Key(b)
-k.key = "%s/%s/%s" % (tag, dt.date().isoformat(), bn)
+k.key = "%s/%s/%s/%s" % (tag, dt.date().isoformat(), dt.strftime("%H"), bn)
 print "key:", k.key
 k.set_contents_from_filename(fn)
 #hopefully any exceptions before here will stop us deleting the source file
 os.remove(fn)
 
-k = Key(b)
-k.key = "%s/%s/%s" % (tag, dt.date().isoformat(), thumbbn)
-print "key:", k.key
-k.set_contents_from_filename(thumbfn)
-#hopefully any exceptions before here will stop us deleting the source file
-os.remove(thumbfn)
+for i in range(1, 6):
+
+  thumbfn = "/tmp/%s.%d.jpg" % (bn, i)
+  thumbbn = "%s.%d.jpg" % (bn, i)
+
+  if os.path.isfile(thumbfn):
+    k = Key(b)
+    k.key = "%s/%s/%s/%s" % (tag, dt.date().isoformat(), dt.strftime("%H"), thumbbn)
+    print "key:", k.key, "fn:", thumbfn
+    k.set_contents_from_filename(thumbfn)
+    #hopefully any exceptions before here will stop us deleting the source file
+    try:
+      os.remove(thumbfn)
+    except:
+      print "oops, couldnt remove %s" % thumbfn
+      pass
