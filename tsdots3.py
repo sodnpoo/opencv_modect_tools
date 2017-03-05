@@ -59,15 +59,20 @@ def get_bucket(bucket_name):
     bucket = conn.get_bucket(bucket_name)
   return bucket
 
+year = dt.strftime('%Y')
+month = dt.strftime('%m')
+day = dt.strftime('%d')
+hour = dt.strftime('%H')
 
 b = get_bucket('sodnpoo-cams')
 
 k = Key(b)
-k.key = "%s/%s/%s/%s" % (tag, dt.date().isoformat(), dt.strftime("%H"), bn)
+k.key = "%s/%s/%s/%s/%s/%s" % (tag, year, month, day, hour, bn)
+#k.key = "%s/%s/%s/%s" % (tag, dt.date().isoformat(), dt.strftime("%H"), bn)
 print "key:", k.key
 k.set_contents_from_filename(fn)
 #hopefully any exceptions before here will stop us deleting the source file
-os.remove(fn)
+#os.remove(fn)
 
 for i in range(1, 6):
 
@@ -76,7 +81,8 @@ for i in range(1, 6):
 
   if os.path.isfile(thumbfn):
     k = Key(b)
-    k.key = "%s/%s/%s/%s" % (tag, dt.date().isoformat(), dt.strftime("%H"), thumbbn)
+    #k.key = "%s/%s/%s/%s" % (tag, dt.date().isoformat(), dt.strftime("%H"), thumbbn)
+    k.key = "%s/%s/%s/%s/%s/%s" % (tag, year, month, day, hour, thumbbn)
     print "key:", k.key, "fn:", thumbfn
     k.set_contents_from_filename(thumbfn)
     #hopefully any exceptions before here will stop us deleting the source file
