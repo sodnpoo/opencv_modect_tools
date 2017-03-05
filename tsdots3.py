@@ -72,7 +72,7 @@ k.key = "%s/%s/%s/%s/%s/%s" % (tag, year, month, day, hour, bn)
 print "key:", k.key
 k.set_contents_from_filename(fn)
 #hopefully any exceptions before here will stop us deleting the source file
-#os.remove(fn)
+os.remove(fn)
 
 for i in range(1, 6):
 
