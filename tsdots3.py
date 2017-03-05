@@ -34,11 +34,14 @@ thumbfn = "/tmp/%s.%%d.jpg" % bn
 thumbbn = "%s.%%d.jpg" % bn
 print fn, bn, en, thumbfn, thumbbn
 
-"ffmpeg -i 1488702455.mp4 -ss 00:00:03.000 -vframes 5 -vf fps=1/3 out_%d.jpg"
-thumbcmd = "ffmpeg -i %s -ss 00:00:03.000 -vframes 5 -vf fps=1/3 -s 480x320 %s" % (fn, thumbfn)
-#thumbcmd = "ffmpeg -i %s -ss 00:00:03.000 -vframes 1 %s" % (fn, thumbfn)
-print thumbcmd
 
+tmpfn = "/tmp/%s" % bn
+thumbcmd = "ffmpeg -i %s -vcodec copy %s" % (fn, tmpfn)
+print thumbcmd
+os.system(thumbcmd)
+
+thumbcmd = "ffmpeg -i %s -ss 00:00:03.000 -vframes 5 -vf fps=1/3 -s 480x320 %s" % (tmpfn, thumbfn)
+print thumbcmd
 os.system(thumbcmd)
 
 unixts = int(en)
@@ -70,8 +73,9 @@ k = Key(b)
 k.key = "%s/%s/%s/%s/%s/%s" % (tag, year, month, day, hour, bn)
 #k.key = "%s/%s/%s/%s" % (tag, dt.date().isoformat(), dt.strftime("%H"), bn)
 print "key:", k.key
-k.set_contents_from_filename(fn)
+k.set_contents_from_filename(tmpfn)
 #hopefully any exceptions before here will stop us deleting the source file
+os.remove(tmpfn)
 os.remove(fn)
 
 for i in range(1, 6):
