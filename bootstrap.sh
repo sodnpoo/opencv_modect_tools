@@ -47,7 +47,7 @@ echo "0 */6 * * * pi /home/pi/opencv_modect_tools/sweep.sh" | sudo tee -a /etc/c
 
 #install boto
 sudo pip install boto
-echo *** don't forget to configure ~/.aws/credentials ***
+echo dont forget to configure ~/.aws/credentials
 
 # incrond
 echo pi | sudo tee -a /etc/incron.allow > /dev/null
